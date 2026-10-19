@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 Buvusiųjų Quiz'as: Amelija & Austėja Edition 🔥</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --primary: #ec4899;
+            --primary-hover: #db2777;
+            --secondary: #8b5cf6;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --error: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a, #020617);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: var(--primary);
+            filter: blur(120px);
+            opacity: 0.25;
+            top: -100px;
+            right: -100px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f472b6, #a78bfa, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Start Screen */
+        #start-screen {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .player-select {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .player-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--card-border);
+            padding: 16px 28px;
+            border-radius: 16px;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .player-btn:hover, .player-btn.selected {
+            border-color: var(--primary);
+            background: rgba(236, 72, 153, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-main {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -5px rgba(236, 72, 153, 0.4);
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(236, 72, 153, 0.6);
+        }
+
+        /* Quiz Screen */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid var(--card-border);
+            padding: 16px 20px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.98rem;
+        }
+
+        .option-card:hover:not(.disabled) {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--secondary);
+            transform: translateX(4px);
+        }
+
+        .option-card.correct {
+            background: rgba(16, 185, 129, 0.2) !important;
+            border-color: var(--success) !important;
+            color: #6ee7b7;
+        }
+
+        .option-card.incorrect {
+            background: rgba(239, 68, 68, 0.2) !important;
+            border-color: var(--error) !important;
+            color: #fca5a5;
+        }
+
+        .option-card.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: rgba(15, 23, 42, 0.8);
+            border-left: 4px solid var(--accent);
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .next-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            float: right;
+            transition: all 0.2s ease;
+            display: none;
+        }
+
+        .next-btn:hover {
+            background: #7c3aed;
+        }
+
+        /* Results Screen */
+        #result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+        }
+
+        .score-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-total {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .roast-badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--accent);
+            color: #fcd34d;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .roast-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .roast-text {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="glow"></div>
+    
+    <header>
+        <h1>🔥 Buvusiųjų Quiz'as 🔥</h1>
+        <p class="subtitle">Specialiai Amelijai ir Austėjai – patikrinkim, ką iš tikrųjų žinot!</p>
+    </header>
+
+    <!-- START SCREEN -->
+    <div id="start-screen">
+        <p style="font-size: 1.1rem; font-weight: 600;">Kas šiandien laikys šį paslapčių egzaminą?</p>
+        
+        <div class="player-select">
+            <button class="player-btn" onclick="selectPlayer('Amelija')">
+                <span>👧</span> Amelija
+            </button>
+            <button class="player-btn" onclick="selectPlayer('Austėja')">
+                <span>👩</span> Austėja
+            </button>
+        </div>
+
+        <button class="btn-main" id="start-btn" onclick="startQuiz()" disabled style="opacity: 0.5; cursor: not-allowed;">
+            Pradėti Quiz'ą 🚀
+        </button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" style="display: none;">
+        <div class="quiz-header">
+            <span id="player-label">Žaidėja: -</span>
+            <span id="question-count">Klausimas 1 iš 15</span>
+            <span id="score-display">Taškai: 0</span>
+        </div>
+
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="question-title" id="question-text">Klausimas kraunasi...</div>
+
+        <div class="options-grid" id="options-container"></div>
+
+        <div class="explanation-box" id="explanation-box"></div>
+
+        <div class="clearfix">
+            <button class="next-btn" id="next-btn" onclick="nextQuestion()">Kitas klausimas ➔</button>
+        </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div id="result-screen">
+        <div class="score-circle">
+            <span class="score-number" id="final-score">0</span>
+            <span class="score-total" id="final-total">iš 15</span>
+        </div>
+
+        <div class="roast-badge" id="roast-badge">Rezultatas</div>
+        <h2 class="roast-title" id="roast-title">Vertinimas kraunamas...</h2>
+        <p class="roast-text" id="roast-text">...</p>
+
+        <button class="btn-main" onclick="restartQuiz()">Bandyti dar kartą 🔄</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            q: "1. Kas buvo pirma buvusi mergina Kaune?",
+            options: ["Dajana", "Mila", "Jekaterina", "Mergina iš Švenčionėlių"],
+            correct: 1,
+            exp: "💡 **Teisingai!** Mila – pirma buvusi Kaune (ir ta, su kuria praleista daugiausiai laiko susirašinėjimuose!)."
+        },
+        {
+            q: "2. Kuri buvusi pripažinta pati gražiausia ir labiausiai patikusi emociškai?",
+            options: ["Mila", "Dajana", "Jekaterina", "Mergina iš Uzbekistano"],
+            correct: 1,
+            exp: "💡 **Teisingai!** Dajana – autoriaus manymu, absoliuti grožio ir emocijų nugalėtoja."
+        },
+        {
+            q: "3. Kas buvo pirmoji didžioji meilė?",
+            options: ["Jekaterina", "Dajana", "Mila", "Denis"],
+            correct: 0,
+            exp: "💡 **Teisingai!** Jekaterina užima pirmosios meilės sostą."
+        },
+        {
+            q: "4. Kiek iš viso buvo buvusių/partnerių Švenčionėliuose?",
+            options: ["2", "5", "10", "15"],
+            correct: 2,
+            exp: "💡 **Teisingai!** Švenčionėliai pasižymi galinga statistika – net 10!"
+        },
+        {
+            q: "5. Kiek buvusių merginų buvo Kaune (ir visos iš Lietuvos)?",
+            options: ["2", "4", "6", "1"],
+            correct: 0,
+            exp: "💡 **Teisingai!** Kaune buvo 2 buvusios (visos lietuvaitės)."
+        },
+        {
+            q: "6. Kiek partnerių/buvusių buvo iš užsienio (Uzbekistanas, Latvija, Kazachstanas, Pietų Korėja...)?",
+            options: ["2", "3", "5", "8"],
+            correct: 2,
+            exp: "💡 **Teisingai!** Tarptautiniame sąraše – 5 partneriai (Uzbekistanas, Latvija, Kazachstanas, Pietų Korėja ir kt.)."
+        },
+        {
+            q: "7. Kuri buvusi / kuris buvęs labiausiai patiko pagal charakterį?",
+            options: ["Dajana ir Denis", "Mila ir Jekaterina", "Tik Adrian", "Nė vienas"],
+            correct: 0,
+            exp: "💡 **Teisingai!** Pagal charakterį ir vaibą labiausiai atitiko Dajana ir Denis."
+        },
+        {
+            q: "8. Su kuria buvusia buvo praleista daugiausiai laiko bendraujant?",
+            options: ["Su Dajana", "Su Mila", "Su Jekaterina", "Su Adrian"],
+            correct: 1,
+            exp: "💡 **Teisingai!** Su Mila buvo bendraujama daugiausiai zandikaulį skaudinančių pokalbių."
+        },
+        {
+            q: "9. Su kuo įvyko pati įsimintiniausia istorija?",
+            options: ["Su Adrian", "Su Denis", "Su Dajana", "Švenčionėliuose su visais"],
+            correct: 0,
+            exp: "💡 **Teisingai!** Su Adrian įvyko pati įsimintiniausia ir labiausiai neįtikėtina istorija!"
+        },
+        {
+            q: "10. Kas buvo pirmasis žmogus, su kuriuo įvyko pirmasis bučinys?",
+            options: ["Mergina", "Vaikinas", "Niekas neprisimena", "Šuo (netyčia)"],
+            correct: 1,
+            exp: "💡 **Teisingai!** Pirmasis bučinys buvo su vaikinu."
+        },
+        {
+            q: "11. Kiek metų buvo antrjam žmogui, su kuriuo autorius pasibučiavo?",
+            options: ["15 m.", "16 m.", "18 m.", "20 m."],
+            correct: 2,
+            exp: "💡 **Teisingai!** Antram žmogui buvo lygiai 18 metų."
+        },
+        {
+            q: "12. Kas dažniausiai pirmas parašydavo bendraujant – autorius ar buvusios?",
+            options: ["Visada autorius", "Visada buvusios", "Huevo znaet (velnias žino)", "Niekas nerašė, kalbėjo telepatiškai"],
+            correct: 2,
+            exp: "💡 **Teisingai!** Oficialus atsakymas: „Huevo znaet“! Niekas nerenka tokios statistikos."
+        },
+        {
+            q: "13. Su kuo iš buvusiųjų autorius galbūt susitaikytų ateityje?",
+            options: ["Su pirma meile Jekaterina", "Su Dajana", "Neatsakyta / Faktas dar nepateiktas", "Su visais iš karto"],
+            correct: 2,
+            exp: "💡 **Teisingai!** Šis klausimas paliktas papildymui – informacija dar neatskleista!"
+        },
+        {
+            q: "14. Dėl kokios pagrindinės priežasties įvyko išsiskyrimai?",
+            options: ["Dėl atstumo", "Neatsakyta / Laukiame papildymo", "Dėl skirtingų horoskopų", "Dėl per didelio dramos kiekio"],
+            correct: 1,
+            exp: "💡 **Teisingai!** Tikroji išsiskyrimų priežastis dar neįtraukta į archyvą – neatsakyta."
+        },
+        {
+            q: "15. Paskutinis klausimas Amelijai ir Austėjai: Kas po šio testo turėtų statyti kavos/gėrimų?",
+            options: ["Ta, kuri surinko mažiau taškų!", "Amelija", "Austėja", "Abu / Autorius"],
+            correct: 0,
+            exp: "💡 **Teisingai!** Tas kas pralaimėjo – stato! Laikas skaičiuoti rezultatus."
+        }
+    ];
+
+    let selectedPlayer = "";
+    let currentQ = 0;
+    let score = 0;
+    let answered = false;
+
+    function selectPlayer(name) {
+        selectedPlayer = name;
+        document.querySelectorAll('.player-btn').forEach(btn => {
+            btn.classList.remove('selected');
+            if (btn.innerText.includes(name)) btn.classList.add('selected');
+        });
+        const startBtn = document.getElementById('start-btn');
+        startBtn.disabled = false;
+        startBtn.style.opacity = '1';
+        startBtn.style.cursor = 'pointer';
+    }
+
+    function startQuiz() {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        document.getElementById('player-label').innerText = `Žaidėja: ${selectedPlayer}`;
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        answered = false;
+        const qData = questions[currentQ];
+        document.getElementById('question-count').innerText = `Klausimas ${currentQ + 1} iš ${questions.length}`;
+        document.getElementById('score-display').innerText = `Taškai: ${score}`;
+        document.getElementById('question-text').innerText = qData.q;
+        
+        // Progress bar
+        const progressPercent = ((currentQ) / questions.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+
+        // Hide explanation and next btn
+        document.getElementById('explanation-box').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+
+        // Load options
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('div');
+            btn.className = 'option-card';
+            btn.innerHTML = `<span>${opt}</span><span class="icon"></span>`;
+            btn.onclick = () => checkAnswer(idx);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIdx) {
+        if (answered) return;
+        answered = true;
+
+        const qData = questions[currentQ];
+        const options = document.querySelectorAll('.option-card');
+
+        options.forEach((opt, idx) => {
+            opt.classList.add('disabled');
+            if (idx === qData.correct) {
+                opt.classList.add('correct');
+                opt.querySelector('.icon').innerText = '✓';
+            }
+            if (idx === selectedIdx && selectedIdx !== qData.correct) {
+                opt.classList.add('incorrect');
+                opt.querySelector('.icon').innerText = '✗';
+            }
+        });
+
+        if (selectedIdx === qData.correct) {
+            score++;
+            document.getElementById('score-display').innerText = `Taškai: ${score}`;
+        }
+
+        // Show explanation
+        const expBox = document.getElementById('explanation-box');
+        expBox.innerHTML = qData.exp;
+        expBox.style.display = 'block';
+
+        // Show next button
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('final-total').innerText = `iš ${questions.length}`;
+
+        const badge = document.getElementById('roast-badge');
+        const title = document.getElementById('roast-title');
+        const text = document.getElementById('roast-text');
+
+        const otherPlayer = selectedPlayer === "Amelija" ? "Austėja" : "Amelija";
+
+        if (score === 15) {
+            badge.innerText = "🏆 PERFEKTIONISTĖ / EKSPERTĖ";
+            title.innerText = `Neįtikėtina, ${selectedPlayer}!`;
+            text.innerText = `${selectedPlayer}, tu žinai visas buvusiųjų paslaptis geriau nei pats autorius! Su tokiu rezultatu ${otherPlayer} net neturi šansų. Ar tu rašai jo biografiją secret dienoraštyje? 🕵️‍♀️✨`;
+        } else if (score >= 10) {
+            badge.innerText = "🔥 PASKALŲ KARALIENĖ";
+            title.innerText = `Labai stipru, ${selectedPlayer}!`;
+            text.innerText = `Surinkti ${score} taškus – tikras pasiekimas. Tu tikrai klausaisi, kai tau pasakoja pikantiškas smulkmenas apie Milą, Dajaną ir Švenčionėlių rekordus. ${otherPlayer} turės labai pasistengti! 💅`;
+        } else if (score >= 6) {
+            badge.innerText = "👀 MĖGĖJA / KLAUSYTIS REIKĖJO GERIAU";
+            title.innerText = `Vidutiniškai, ${selectedPlayer}...`;
+            text.innerText = `${score} taškai? Puse faktų tiesiog spėjai, tiesa? Pripažink, kad kai pasakojo apie pirmuosius bučinius ir tarptautines buvusiųjų šalis, tu žiūrėjai TikTok'ą. Reikia skubiai pakartoti paskalų kursą! ☕`;
+        } else {
+            badge.innerText = "🤡 KATASTROFA / GĖDA";
+            title.innerText = `Oj Jėzau, ${selectedPlayer}...`;
+            text.innerText = `Tik ${score} taškai?! ${selectedPlayer}, ar tu apskritai pažįsti šį žmogų?! Praleidai visas esmines žinias apie Kauną, Uzbekistana ir Adrianą. Dabar oficialiai privalai pastatyti ${otherPlayer} ir autoriui didelę kavą! ☕💀`;
+        }
+    }
+
+    function restartQuiz() {
+        currentQ = 0;
+        score = 0;
+        selectedPlayer = "";
+        
+        document.querySelectorAll('.player-btn').forEach(btn => btn.classList.remove('selected'));
+        const startBtn = document.getElementById('start-btn');
+        startBtn.disabled = true;
+        startBtn.style.opacity = '0.5';
+        startBtn.style.cursor = 'not-allowed';
+
+        document.getElementById('result-screen').style.display = 'none';
+        document.getElementById('start-screen').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
